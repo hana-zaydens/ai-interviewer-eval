@@ -369,3 +369,23 @@ Results are stored in `interviews.db` (SQLite). Launch Datasette with `./start.s
 | `transcripts` | All loaded transcripts with metadata |
 | `coded_turns` | Manually coded turns (from CSV or Airtable) |
 | `llm_coded_turns` | LLM-classified turns |
+
+---
+
+## Roadmap
+
+### v1.0 — current
+- Generalised transcript loader (CSV, JSON, plain text)
+- LLM classification driven by `CODEBOOK.md` and `schema.json`
+- Manual coding via spreadsheet (CSV) or Airtable
+- `--preview` mode with agreement statistics (% agreement, Cohen's kappa)
+- Local SQLite database + Datasette browser
+
+### v2.0 — planned
+- pip-installable Python package (`pip install ai-interviewer-eval`)
+- Few-shot example injection: automatically samples from `coded_turns` to include human-coded examples in the LLM prompt, improving classification accuracy
+- `make_charts.py` pulling live from the database rather than hardcoded values
+
+### v3.0 — exploratory
+- Web interface for browsing and comparing results across datasets
+- Public leaderboard / benchmark of AI interviewer quality scores (inspired by [LMSYS Arena](https://lmsys.org/blog/2023-05-03-arena/)) — a shared space where researchers can submit results from different AI interviewer systems and compare methodological quality
