@@ -40,10 +40,10 @@ load.py → llm_classifier.py --preview → llm_classifier.py --run → ./start.
 ```
 
 ### Customized
-Adapt the coding schema and/or manually code a sample before running the full classifier. Best for: studies where the default definitions need adjusting, or where you want human-coded ground truth to validate the classifier.
+Adapt the coding definitions and/or manually code a sample before running the full classifier. Best for: studies where the default definitions need adjusting, or where you want human-coded ground truth to validate the classifier.
 
 ```
-load.py → [edit schema.json] → [prepare_sample.py → code CSV → load_coded.py]
+load.py → [edit CODEBOOK.md] → [prepare_sample.py → code CSV → load_coded.py]
         → llm_classifier.py --preview → llm_classifier.py --run → ./start.sh
 ```
 
@@ -104,11 +104,13 @@ Opens Datasette in your browser for browsing and filtering the results.
 
 ## Customized workflow
 
-Use this when you want to adjust the coding schema, or when you need to manually code a sample to understand your data before writing a coding prompt.
+Use this when you want to adjust the coding definitions, or when you need to manually code a sample to understand your data before writing them.
 
 ### Option A — You already know what you want to change
 
-Edit `schema.json` directly (see [Customizing schema.json](#customizing-schemajson)), then go straight to the preview step:
+Edit `CODEBOOK.md` to update the coding definitions — this is what the LLM reads as its system prompt (see [CODEBOOK.md — the coding rules](#codebookmd--the-coding-rules)). If you also want to adjust technical settings like the model, bias patterns, or sample size, edit `schema.json` (see [schema.json — technical configuration](#schemajson--technical-configuration)).
+
+Then go straight to the preview step:
 
 ```bash
 python llm_classifier.py --preview
@@ -120,13 +122,13 @@ If the preview looks good, run the full classifier:
 python llm_classifier.py --run
 ```
 
-If you updated the coding schema and want to re-run transcripts that were already classified:
+If you updated `CODEBOOK.md` and want to re-run transcripts that were already classified:
 
 ```bash
 python llm_classifier.py --run --force
 ```
 
-`--force` drops and recreates the `llm_coded_turns` table from scratch. Use this any time you change the coding schema and want clean results.
+`--force` drops and recreates the `llm_coded_turns` table from scratch. Use this any time you update `CODEBOOK.md` and want clean results.
 
 ### Option B — You need to manually code a sample first
 
@@ -160,9 +162,9 @@ python load_coded.py --from-csv sample_turns.csv
 
 Writes the manually coded turns into the `coded_turns` table in `interviews.db`.
 
-**4. Update the coding schema**
+**4. Update the coding definitions**
 
-Use what you learned from coding to refine the definitions and patterns in `schema.json`. See [Customizing schema.json](#customizing-schemajson).
+Use what you learned from coding to refine the definitions and decision rules in `CODEBOOK.md` — this is what the LLM reads as its system prompt. See [CODEBOOK.md — the coding rules](#codebookmd--the-coding-rules). If you also want to adjust bias detection patterns or sample settings, update `schema.json`.
 
 **5. Preview and validate**
 
@@ -172,7 +174,7 @@ python llm_classifier.py --preview
 
 Because you now have manually coded data in the database, the preview will also show agreement statistics (% agreement and Cohen's kappa) between your codes and the classifier's output.
 
-If the agreement is good enough for your purposes, proceed. If not, refine `schema.json` and preview again.
+If the agreement is good enough for your purposes, proceed. If not, refine `CODEBOOK.md` and preview again.
 
 **6. Run the full classifier**
 
@@ -229,7 +231,7 @@ python llm_classifier.py --run --force               Drop llm_coded_turns and re
 
 `--preview` prints each turn with its classification and any `[bias]` or `[missed]` flags so you can eyeball the results. If manually coded data exists in `coded_turns`, agreement statistics (% agreement and Cohen's kappa) are shown automatically.
 
-Use `--run --force` any time you update the coding schema and want the classifier to re-run cleanly on the full dataset.
+Use `--run --force` any time you update `CODEBOOK.md` and want the classifier to re-run cleanly on the full dataset.
 
 ### prepare_sample.py
 
@@ -276,10 +278,6 @@ Controls which Claude model is used for classification:
 
 - `claude-sonnet-4-6` — default; fast and cost-effective
 - `claude-opus-4-8` — more capable; better for nuanced judgment calls like `biasing_response` and `missed_opportunity` if kappa scores are poor
-
-### Coding prompt (`turn_types`)
-
-Defines what each turn type means. The classifier uses these definitions to decide how to label each turn. Edit the descriptions to match your study's interview structure.
 
 ### Bias detection patterns (`biasing_response_patterns`)
 
