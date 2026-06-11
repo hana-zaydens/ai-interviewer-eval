@@ -1,6 +1,9 @@
 # Credentials
 .env
 
+# Claude Code assistant config (project-specific, not for distribution)
+CLAUDE.md
+
 # Virtual environment
 venv/
 
