@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "description": "Coding schema for AI interviewer turn-level analysis. Edit this file to adapt the toolkit to your dataset.",
+  "turn_types": {
+    "AI": {
+      "opening": "First turn of the interview; establishes context and introduces the study",
+      "new_question": "Moves to a new topic, whether as a cold shift or wrapped in praise/acknowledgment of the previous answer",
+      "follow_up": "Asks for elaboration, clarification, or deeper exploration of the participant's immediately preceding response",
+      "closing": "Final turn(s) of the interview; wraps up and thanks the participant",
+      "ambiguous": "Could plausibly be classified as multiple types; requires review",
+      "other": "Does not fit any of the above categories; add a note describing why"
+    },
+    "User": {
+      "response": "Participant responds to the AI's question or statement",
+      "ambiguous": "Unclear how to classify",
+      "other": "Does not fit the response category; add a note"
+    }
+  },
+  "biasing_response_note": "Auto-detection only catches explicit praise patterns. Affirmative reframes, leading interpretations, and vocabulary substitution require manual flagging during coding.",
+  "biasing_response_patterns": [
+    "(?i)^that'?s\\s+(very\\s+|really\\s+|so\\s+|quite\\s+)?(interesting|fascinating|insightful|great|excellent|wonderful|amazing|helpful|valuable|important|thoughtful|nuanced)",
+    "(?i)^(wow|great|excellent|wonderful|fantastic|absolutely|perfect|brilliant|impressive)[!,\\s]",
+    "(?i)^i\\s+(appreciate|love\\s+that|really\\s+appreciate)",
+    "(?i)^thank\\s+you\\s+for\\s+(sharing|that|your\\s+insight|your\\s+perspective)",
+    "(?i)^it'?s\\s+(really\\s+|very\\s+|quite\\s+)?(interesting|fascinating|insightful)\\s+(to\\s+hear|that)"
+  ],
+  "auto_label_rules": {
+    "opening": [
+      {
+        "match": "first AI turn in transcript",
+        "note": "Auto-labeled by position. Add match_pattern entries below to catch recurring opening questions that appear after the first turn."
+      }
+    ],
+    "closing": [
+      {
+        "match": "last AI turn in transcript",
+        "note": "Auto-labeled by position. Add match_pattern entries below to catch standard closing phrases that appear before the final turn."
+      }
+    ],
+    "response": [
+      {
+        "match": "all User turns",
+        "note": "Auto-labeled by speaker. Edit individual turns if needed."
+      }
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "model_note": "Model used for LLM classification. claude-sonnet-4-6 is the default (fast, cost-effective). Switch to claude-opus-4-8 if kappa scores are poor and you want stronger performance on nuanced judgment calls — it costs more per transcript but handles ambiguous cases better.",
+  "sample": {
+    "n": 40,
+    "seed": 42,
+    "note": "Change n to set the total number of transcripts to sample. Change seed to get a different random draw (set to null for a random seed). To sample a fixed number per group, add a 'splits' object: {\"group_a\": 20, \"group_b\": 20}. The split names must match values in the 'split' column of your transcripts table.",
+    "lower_half_ratio": 0.5
+  }
+}

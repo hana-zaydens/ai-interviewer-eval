@@ -1,0 +1,36 @@
+{
+  "databases": {
+    "transcripts": {
+      "queries": {
+        "coded_turns_ordered": {
+          "title": "Coded turns (by transcript and turn order)",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, word_count, char_count, turn_type, biasing_response, missed_opportunity, notes, coded_by FROM coded_turns ORDER BY transcript_id, turn_number"
+        },
+        "biasing_responses": {
+          "title": "All biasing response turns",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, turn_type, notes FROM coded_turns WHERE biasing_response = 1 ORDER BY transcript_id, turn_number"
+        },
+        "missed_opportunities": {
+          "title": "All missed opportunity turns",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, turn_type, notes FROM coded_turns WHERE missed_opportunity = 1 ORDER BY transcript_id, turn_number"
+        },
+        "follow_ups": {
+          "title": "All follow-up turns",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, notes FROM coded_turns WHERE turn_type = 'follow_up' ORDER BY transcript_id, turn_number"
+        },
+        "llm_coded_turns_ordered": {
+          "title": "LLM-coded turns (by transcript and turn order)",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, word_count, char_count, turn_type, biasing_response, missed_opportunity, notes FROM llm_coded_turns ORDER BY transcript_id, turn_number"
+        },
+        "llm_biasing_responses": {
+          "title": "LLM-coded: all biasing response turns",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, turn_type, notes FROM llm_coded_turns WHERE biasing_response = 1 ORDER BY transcript_id, turn_number"
+        },
+        "llm_missed_opportunities": {
+          "title": "LLM-coded: all missed opportunity turns",
+          "sql": "SELECT transcript_id, split, turn_number, speaker, text, turn_type, notes FROM llm_coded_turns WHERE missed_opportunity = 1 ORDER BY transcript_id, turn_number"
+        }
+      }
+    }
+  }
+}

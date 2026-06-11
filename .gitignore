@@ -1,0 +1,17 @@
+# Credentials
+.env
+
+# Virtual environment
+venv/
+
+# Database (large file, reproducible from load_transcripts.py)
+interviews.db
+
+# Generated sample files (reproducible from prepare_sample.py)
+sample_turns.json
+sample_turns.csv
+
+# Python
+__pycache__/
+*.pyc
+.DS_Store
