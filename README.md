@@ -391,4 +391,4 @@ Results are stored in `interviews.db` (SQLite). Launch Datasette with `./start.s
 
 ### v3.0 — exploratory
 - Web interface for browsing and comparing results across datasets
-- Public leaderboard / benchmark of AI interviewer quality scores (inspired by [LMSYS Arena](https://lmsys.org/blog/2023-05-03-arena/)) — a shared space where researchers can submit results from different AI interviewer systems and compare methodological quality
+- Public leaderboard / benchmark of AI interviewer quality scores (inspired by [Arena](https://huggingface.co/spaces/lmarena-ai/arena-leaderboard)) — a shared space where researchers can submit results from different AI interviewer systems and compare methodological quality
