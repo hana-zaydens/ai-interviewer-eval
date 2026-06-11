@@ -8,6 +8,9 @@ A toolkit for evaluating the methodological quality of AI interviewer transcript
 
 Classification can be done manually (via spreadsheet or Airtable) or automatically using an LLM (Claude via the Anthropic API). Results are stored in a local SQLite database and browsable via Datasette.
 
+<img width="10332" height="5007" alt="img_eval_workflow" src="https://github.com/user-attachments/assets/116d4433-4b50-4147-8513-5bb35107dc68" />
+
+
 ---
 
 ## Requirements
