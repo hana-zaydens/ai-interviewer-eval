@@ -16,10 +16,16 @@ Classification can be done manually (via spreadsheet or Airtable) or automatical
 ## Requirements
 
 - Python 3.9+
-- An Anthropic API key (for LLM classification)
+- An API key for your LLM provider (Anthropic, OpenAI, Google, etc.)
 
 ```bash
-pip install anthropic datasette python-dotenv requests
+pip install datasette python-dotenv requests
+```
+
+Install the SDK for your LLM provider. For Anthropic (default):
+
+```bash
+pip install anthropic
 ```
 
 Create a `.env` file in the project root by copying `.env.example` and filling in your credentials:
@@ -33,11 +39,13 @@ cp .env.example .env
 ## Two workflows
 
 ### Run-As-Is
-Use the default coding schema out of the box. Best for: getting a quick read on a dataset, or when the default turn-type and bias definitions fit your study.
+Use the default coding schema out of the box. Best for: getting a quick read on a dataset, or when the default turn-type and bias definitions fit your study. See [CODEBOOK.md](CODEBOOK.md) for the full default definitions.
 
 ```
 load.py → llm_classifier.py --preview → llm_classifier.py --run → ./start.sh
 ```
+
+→ [Full steps](#run-as-is-workflow)
 
 ### Customized
 Adapt the coding definitions and/or manually code a sample before running the full classifier. Best for: studies where the default definitions need adjusting, or where you want human-coded ground truth to validate the classifier.
@@ -46,6 +54,8 @@ Adapt the coding definitions and/or manually code a sample before running the fu
 load.py → [edit CODEBOOK.md] → [prepare_sample.py → code CSV → load_coded.py]
         → llm_classifier.py --preview → llm_classifier.py --run → ./start.sh
 ```
+
+→ [Full steps](#customized-workflow)
 
 ---
 
@@ -134,7 +144,11 @@ python llm_classifier.py --run --force
 
 This is the right path when you're not yet sure how the coding categories apply to your data.
 
-**1. Pull a sample**
+**1. Configure your sample (optional)**
+
+If you need to adjust the sampling strategy — e.g. change the number of transcripts, sample a fixed number per group, or change the short/long transcript ratio — edit the `"sample"` key in `schema.json` before pulling. See [Sample configuration](#sample-configuration-sample) for options.
+
+**2. Pull a sample**
 
 ```bash
 python prepare_sample.py
@@ -142,9 +156,7 @@ python prepare_sample.py
 
 Selects a stratified random sample of transcripts, parses them into individual turns, pre-labels what can be detected automatically (first/last AI turn, User turns, explicit praise patterns), and saves the result to `sample_turns.csv`.
 
-Sample size and strategy are configured in `schema.json` under the `"sample"` key.
-
-**2. Code the sample**
+**3. Code the sample**
 
 Open `sample_turns.csv` in a spreadsheet (Excel, Google Sheets, Numbers). Fill in the `turn_type`, `biasing_response`, `missed_opportunity`, and `notes` columns for each AI turn.
 
@@ -154,7 +166,7 @@ The `turn_type` column accepts: `opening`, `new_question`, `follow_up`, `closing
 
 The `biasing_response` and `missed_opportunity` columns accept: `TRUE` / `FALSE` (or `1` / `0`).
 
-**3. Load codes back into the database**
+**4. Load codes back into the database**
 
 ```bash
 python load_coded.py --from-csv sample_turns.csv
@@ -162,11 +174,11 @@ python load_coded.py --from-csv sample_turns.csv
 
 Writes the manually coded turns into the `coded_turns` table in `interviews.db`.
 
-**4. Update the coding definitions**
+**5. Update the coding definitions**
 
 Use what you learned from coding to refine the definitions and decision rules in `CODEBOOK.md` — this is what the LLM reads as its system prompt. See [CODEBOOK.md — the coding rules](#codebookmd--the-coding-rules). If you also want to adjust bias detection patterns or sample settings, update `schema.json`.
 
-**5. Preview and validate**
+**6. Preview and validate**
 
 ```bash
 python llm_classifier.py --preview
@@ -176,7 +188,7 @@ Because you now have manually coded data in the database, the preview will also 
 
 If the agreement is good enough for your purposes, proceed. If not, refine `CODEBOOK.md` and preview again.
 
-**6. Run the full classifier**
+**7. Run the full classifier**
 
 ```bash
 python llm_classifier.py --run
@@ -254,7 +266,7 @@ Options:
 
 ---
 
-## Customizing the toolkit
+## Configuration reference
 
 ### CODEBOOK.md — the coding rules
 
