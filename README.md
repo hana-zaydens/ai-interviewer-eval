@@ -1,6 +1,6 @@
 # ai-interviewer-eval
 
-A toolkit for evaluating the methodological quality of AI interviewer transcripts. It analyses turn-level dynamics including:
+A toolkit for evaluating the methodological quality of AI interviewer transcripts. It analyzes turn-level dynamics including:
 
 - **Probe depth** — how often the AI follows up vs. moves on (miss rate)
 - **Response bias** — language that could steer participant responses (praise, leading interpretations, vocabulary substitution, agency shifts)
